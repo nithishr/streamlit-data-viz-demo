@@ -64,7 +64,7 @@ def get_pics_from_location(locations_df, size=10):
 def get_file_content_as_string(path):
     """ Download a single file and make its content available as a string"""
     url = (
-        "https://raw.githubusercontent.com/nithishr/streamlit-travel-viz-demo/main/"
+        "https://raw.githubusercontent.com/nithishr/streamlit-data-viz-demo/main/"
         + path
     )
     response = urllib.request.urlopen(url)
