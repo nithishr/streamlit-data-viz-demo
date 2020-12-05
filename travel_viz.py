@@ -156,4 +156,4 @@ if show_images:
 
 
 if show_code:
-    st.code(get_file_content_as_string("ml_frontend.py"))
+    st.code(get_file_content_as_string("travel_viz.py"))
