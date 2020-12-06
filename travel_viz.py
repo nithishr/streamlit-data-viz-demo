@@ -109,7 +109,6 @@ if show_histograms:
 
     months = travel_data.groupby(travel_data["date"].dt.month).count().plot(kind="bar")
     months.set_xlabel("Month of Data Points")
-    st.subheader("Heatmap")
     hist_months = months.get_figure()
     st.subheader("Data Split by Months")
     st.pyplot(hist_months)
