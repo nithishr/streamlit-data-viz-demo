@@ -14,7 +14,7 @@ Install the dependencies
 
 1. Get the Google Maps location history from [Google Takeout](https://takeout.google.com/settings/takeout). 
 
-2. Clean the data by running `data_cleaning.py`. It removes all data except latitude, longitude & timestamps. The data is also converted in to the standard format.
+2. Clean the data by running `data_cleaning.py`. It removes all data except latitude, longitude & timestamps. The data is also converted in to the standard format. A sample data file containing 10K data points is provided in this repo `clean_data_sample.csv`.
 
 3. For getting images from Flickr, you need to create an [app](https://www.flickr.com/services/apps/create/) & get the API key & secret.  
 The API key & secret are stored in a `.env` file. 
