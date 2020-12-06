@@ -27,9 +27,6 @@ st.set_page_config(
 def load_data():
     """ Load the cleaned data with latitudes, longitudes & timestamps """
     travel_log = pd.read_csv("clean_data.csv")
-    travel_log.rename(
-        columns={"latitudeE71": "lat", "longitudeE71": "lon"}, inplace=True
-    )
     travel_log["date"] = pd.to_datetime(travel_log["ts"])
     return travel_log
 
@@ -44,7 +41,7 @@ def get_pics_from_location(locations_df, size=10):
     for index, row in locations_df.iterrows():
         try:
             photos = flickr.photos.search(
-                lat=row["lat"], lon=row["lon"], per_page=10, pages=1
+                lat=row["latitude"], lon=row["longitude"], per_page=10, pages=1
             )
             # Get a random image from the set of images
             choice_max = min(size - 1, int(photos["photos"]["total"]))
@@ -107,16 +104,20 @@ if show_histograms:
     years = travel_data.groupby(travel_data["date"].dt.year).count().plot(kind="bar")
     years.set_xlabel("Year of Data Points")
     hist_years = years.get_figure()
+    st.subheader("Data Split by Year")
     st.pyplot(hist_years)
 
     months = travel_data.groupby(travel_data["date"].dt.month).count().plot(kind="bar")
     months.set_xlabel("Month of Data Points")
+    st.subheader("Heatmap")
     hist_months = months.get_figure()
+    st.subheader("Data Split by Months")
     st.pyplot(hist_months)
 
     hours = travel_data.groupby(travel_data["date"].dt.hour).count().plot(kind="bar")
     hours.set_xlabel("Hour of Data Points")
     hist_hours = hours.get_figure()
+    st.subheader("Data Split by Hours of Day")
     st.pyplot(hist_hours)
 
 if show_detailed_months:
@@ -127,29 +128,35 @@ if show_detailed_months:
     )
     month_year.set_xlabel("Month, Year of Data Points")
     hist_month_year = month_year.get_figure()
+    st.subheader("Data Split by Month, Year")
     st.pyplot(hist_month_year)
 
 
 if show_heatmap:
     # Plot the heatmap using folium. It is resource intensive!
+    # Set the map to center around Munich, Germany (48.1351, 11.5820)
     map_heatmap = folium.Map(location=[48.1351, 11.5820], zoom_start=11)
 
     # Filter the DF for columns, then remove NaNs
-    heat_df = travel_data[["lat", "lon"]]
-    heat_df = heat_df.dropna(axis=0, subset=["lat", "lon"])
+    heat_df = travel_data[["latitude", "longitude"]]
+    heat_df = heat_df.dropna(axis=0, subset=["latitude", "longitude"])
 
     # List comprehension to make list of lists
-    heat_data = [[row["lat"], row["lon"]] for index, row in heat_df.iterrows()]
+    heat_data = [
+        [row["latitude"], row["longitude"]] for index, row in heat_df.iterrows()
+    ]
 
     # Plot it on the map
     HeatMap(heat_data).add_to(map_heatmap)
 
     # Display the map using the community component
+    st.subheader("Heatmap")
     folium_static(map_heatmap)
 
 
 if show_images:
     # Show the images from Flickr's public images
+    st.subheader("Image Highlights")
     sample_data = travel_data.sample(n=images_count)
     urls = get_pics_from_location(sample_data, images_count)
     st.image(urls, width=200)
